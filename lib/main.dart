@@ -17,36 +17,28 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   final url = "https://jsonplaceholder.typicode.com/posts";
-  var _postsJson = [];
 
-  void fetchPosts() async{
+  void postData() async {
     try{
-      final response = await get(Uri.parse(url));
-      final jsonData = jsonDecode(response.body) as List;
-
-      setState(() {
-        _postsJson = jsonData;
+      final response = await post(Uri.parse(url), body: {
+        "title": "Anything",
+        "body": "Post Body",
+        "userId": "1"
       });
-    }catch(err){}
-  }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    fetchPosts();
+      print(response.body); 
+    }catch(e) {}
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: ListView.builder(
-          itemCount: _postsJson.length,
-          itemBuilder: (context, i){
-            final post = _postsJson[i];
-            return Text('Title: ${post["title"]}\n Body: ${post["body"]}\n\n');
-          },
+        body: Center(
+          child: ElevatedButton(
+            onPressed: postData,
+            child: Text("Send Post"),
+          ),
         ),
       ),
     );
